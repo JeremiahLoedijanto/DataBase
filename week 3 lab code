@@ -1,0 +1,54 @@
+--Q1
+--Explaination: By using "ILIKE" to find students home suburb, in addition to find the age of each students below the age 40 by making an argument the student age is lesser then the age 40
+select students.name, students.suburb, students.age
+from students
+where students.age < 40
+and (students.suburb ilike '%Manly' or students.suburb ilike '%Bondi');
+
+--Q2
+select students.name, students.id, books.title, loans.due_date, books.id, loans.return_date
+from students, loans, books
+where students.id = books.id
+and loans.return_date is null;
+
+--Q3 and Q4
+--Explaination: by using clause between i can get a list of table who borrowed the book between june 10 to june 13,
+--              however before getting the borrow date we need to join the student id with the loans student id
+select students.name, loans.borrow_date, students.id, loans.student_id
+from students, loans
+where students.id = loans.student_id
+and loans.borrow_date between '2026-06-10' and '2026-06-13'
+order by students.name;
+
+--Q5 and Q6
+--Explaination: by using IN select i can use the method ilike to find the book with the keywords fundamentals or essentials,
+--              however by using only IN operator it will not catch the title of the book because it only catch the first words of the title not the last words of the title
+--Explaination Q6: i would find the in operator is easy however i did need to look up on w3school to understand the concept
+select books.title, books.id
+from books
+where books.title in (select books.title from books)
+and (books.title ilike '%Fundamentals' or books.title ilike '%Essentials')
+order by books.id;
+--Q7
+select books.title, books.id, loans.book_id, loans.return_date, loans.due_date
+from books, loans
+where books.id = loans.book_id
+and loans.return_date > loans.due_date
+order by books.id;
+
+--Q8
+select students.name, loans.borrow_date, books.title, books.id, students.id, loans.book_id, loans.student_id
+from students, loans, books
+where students.id = loans.student_id
+and books.id = loans.book_id
+and books.title ilike '%Advanced Databases'
+order by books.title;
+
+--Q9
+select books.title, books.id, loans.book_id, loans.due_date, students.name, students.id, loans.student_id, loans.borrow_date, loans.return_date
+from students, loans, books
+where books.id = loans.book_id
+and students.id = loans.student_id
+and loans.return_date is null
+and loans.due_date < '2026-06-20'
+order by loans.due_date;
